@@ -24,6 +24,22 @@ exports.createEmergency = async (req, res, next) => {
   }
 }
 
+exports.getOwnEmergencies = async ( req, res, next) => {
+  try {
+    const { userId } = req.user
+    const emergencies = await Emergency.find({ user: userId }).populate('user')
+    return res.send({
+      status: 'success',
+      message: 'User own emergencies',
+      data: {
+        emergencies
+      }
+    })
+  } catch(err){
+    return next(err)
+  }
+}
+
 exports.getEmergencies = async ( req, res, next) => {
   try {
     const emergencies = await Emergency.find({}).populate('user')

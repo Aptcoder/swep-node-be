@@ -105,11 +105,12 @@ exports.getResetCode = async (req, res, next)=>{
 
       transporter.sendMail(mailOptions, async function(err, data){
         if(err){
-          // res.status(500).json({
-          //   status:'failed',
-          //   message:'Failed to send email. Please try again'
-          // })
-          throw new APIError("500", "failed to send email> please try again")
+          console.log('err',err)
+          res.status(500).json({
+            status:'failed',
+            message:'Failed to send email. Please try again'
+          })
+          // throw new APIError("500", "failed to send email> please try again")
         }else{
           const newToken = new TokenModel({
               regNo:req.body.regNo,

@@ -3,12 +3,18 @@ const mongoose = require('mongoose')
 const { handleError } = require('./util/error_handler')
 const { DATABASE_URL, PORT } = require('../src/config')
 const userRouter = require('../src/components/user/user_router')
+<<<<<<< HEAD
+const doctorRouter = require('../src/components/admin/doctor_router')
+const cors = require('cors')
+=======
 const emergencyRouter = require('../src/components/emergency/emergency.routes')
+>>>>>>> 7b9b3d953b5a40c916cb731d78fd1e426322b1a9
 const stageOneVpRouter = require('../src/components/stage_one_vp/stage_one_vp.routes')
 const cors = require('cors')
 
 // initialise express app
 const app = express()
+app.use(cors())
 app.use(express.json())
 
 
@@ -36,7 +42,11 @@ mongoose.connect(DATABASE_URL, {
 })
 
 app.use('/users', userRouter)
+<<<<<<< HEAD
+app.use('/doctors', doctorRouter)
+=======
 app.use('/emergencies', emergencyRouter )
+>>>>>>> 7b9b3d953b5a40c916cb731d78fd1e426322b1a9
 
 app.get('/', (req, res) => {
   return res.send('Hello world')

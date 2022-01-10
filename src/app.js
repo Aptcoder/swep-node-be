@@ -3,12 +3,14 @@ const mongoose = require('mongoose')
 const { handleError } = require('./util/error_handler')
 const { DATABASE_URL, PORT } = require('../src/config')
 const userRouter = require('../src/components/user/user_router')
+const cors = require('cors')
 const emergencyRouter = require('../src/components/emergency/emergency.routes')
 const stageOneVpRouter = require('../src/components/stage_one_vp/stage_one_vp.routes')
-const cors = require('cors')
+
 
 // initialise express app
 const app = express()
+app.use(cors())
 app.use(express.json())
 
 

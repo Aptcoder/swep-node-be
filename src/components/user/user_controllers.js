@@ -82,7 +82,15 @@ exports.getResetCode = async (req, res, next)=>{
   const {error} = Validate(req.body)
   if(error) throw new APIError ("400", error.details[0].message )
   
+  const checkEmail = await userModel.findOne({email:req.body.email})
+  if(!checkEmail) return res.status(403).send('Email not verified')
+  
+  
+ 
   try{
+
+      
+    
       let transporter = nodemailer.createTransport({
         service:'gmail',
         auth:{
@@ -105,10 +113,7 @@ exports.getResetCode = async (req, res, next)=>{
 
       transporter.sendMail(mailOptions, async function(err, data){
         if(err){
-          // res.status(500).json({
-          //   status:'failed',
-          //   message:'Failed to send email. Please try again'
-          // })
+     
           throw new APIError("500", "failed to send email> please try again")
         }else{
           const newToken = new TokenModel({
@@ -118,13 +123,7 @@ exports.getResetCode = async (req, res, next)=>{
           })
           console.log('data', data)
           const saveToken = await newToken.save()
-          // res.status(200).json({
-          //   status:'success',
-          //   message:'Email has been sent to you. Please check your email',
-          //   data:{
-          //     ...saveToken
-          //   }
-          // })
+   
           return responseHandler(res, 200, "Email sent");
 
         }
@@ -175,6 +174,8 @@ exports.ResetPassword = async (req, res, next)=>{
     return responseHandler(res, 200, "password successfully updated")
 
   }catch(ex){
-    return next(err)
+   
+    return next(ex);
+  
   }
 }

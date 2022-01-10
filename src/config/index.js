@@ -6,7 +6,9 @@ module.exports = (() => {
     return {
       DATABASE_URL: process.env.DATABASE_URL,
       PORT: process.env.PORT,
-      JWT_SECRET: process.env.JWT_SECRET
+      JWT_SECRET: process.env.JWT_SECRET,
+      EMAIL: process.env.EMAIL,
+      PASSWORD: process.env.PASSWORD
     }
   }
   return {

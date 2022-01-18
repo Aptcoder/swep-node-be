@@ -81,7 +81,14 @@ exports.acceptProfile = async (req, res, next) => {
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
     await profile.update({ status: 'complete'})
-    // await UserModel.updateOne({ id: userId }, { health_center_id: 'HC-' + nanoid(5)} )
+    const user = await UserModel.findOne({ _id: userId })
+    const msg = {
+      from: 'omilosamuel@gmail.com',
+      to: user.email,
+      subject: 'MedEase: Medical Reports Verified',
+      html: '<div> Your medical reports have been verified! Head back to medEase for more info <div>'
+    }
+    const responses = await mailHelper.send(msg)
     return responseHandler(res, 200, 'Accepted verification profile')
   } catch(err){
     return next(err)
@@ -98,6 +105,14 @@ exports.declineProfile = async (req, res, next) => {
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
     await profile.update({ status: 'declined', comments: comments });
+    const user = await UserModel.findOne({ _id: userId })
+    const msg = {
+      from: 'omilosamuel@gmail.com',
+      to: user.email,
+      subject: 'MedEase: Medical Reports Declined',
+      html: '<div> Your Medical Reports have been declined! Head back to medEase for more info <div>'
+    }
+    const responses = await mailHelper.send(msg)
     return responseHandler(res, 200, 'Declined verification profile', { profile })
   } catch(err){
     return next(err)

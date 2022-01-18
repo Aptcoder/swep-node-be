@@ -7,6 +7,7 @@ const {TokenModel, Validate} = require('./tokens_model')
 const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
 const config = require('../../config')
+const mailHelper = require('../../util/mail')
 const jwt = require('jsonwebtoken')
 
 exports.getAllUsers = async (req, res, next) => {
@@ -98,7 +99,7 @@ exports.getResetCode = async (req, res, next)=>{
       const code = Math.floor(Math.random()* (999999-100000) + 1000000)
 
       let mailOptions = {
-        from:'MedEase Care',
+        from:'omilosamuel@gmail.com',
         to: req.body.email,
         subject: 'MedEase Reset Code',
         html:`<div>
@@ -107,33 +108,46 @@ exports.getResetCode = async (req, res, next)=>{
               </div>`
       }
 
-      transporter.sendMail(mailOptions, async function(err, data){
-        if(err){
-          console.log('err',err)
-          res.status(500).json({
-            status:'failed',
-            message:'Failed to send email. Please try again'
-          })
-          // throw new APIError("500", "failed to send email> please try again")
-        }else{
-          const newToken = new TokenModel({
-              regNo:req.body.regNo,
-              token:code,
-              email:req.body.email
-          })
-          console.log('data', data)
-          const saveToken = await newToken.save()
-          // res.status(200).json({
-          //   status:'success',
-          //   message:'Email has been sent to you. Please check your email',
-          //   data:{
-          //     ...saveToken
-          //   }
-          // })
-          return responseHandler(res, 200, "Email sent");
+      const responses = await mailHelper.send(mailOptions);
+      const newToken = new TokenModel({
+        regNo:req.body.regNo,
+        token:code,
+        email:req.body.email
+    })
+    console.log('data', responses)
+    const saveToken = await newToken.save()
+    res.status(200).send({
+      status: '',
+      message: 'Code sent to email address'
+    })
 
-        }
-      })
+      // transporter.sendMail(mailOptions, async function(err, data){
+      //   if(err){
+      //     console.log('err',err)
+      //     res.status(500).json({
+      //       status:'failed',
+      //       message:'Failed to send email. Please try again'
+      //     })
+      //     // throw new APIError("500", "failed to send email> please try again")
+      //   }else{
+      //     const newToken = new TokenModel({
+      //         regNo:req.body.regNo,
+      //         token:code,
+      //         email:req.body.email
+      //     })
+      //     console.log('data', data)
+      //     const saveToken = await newToken.save()
+      //     // res.status(200).json({
+      //     //   status:'success',
+      //     //   message:'Email has been sent to you. Please check your email',
+      //     //   data:{
+      //     //     ...saveToken
+      //     //   }
+      //     // })
+      //     return responseHandler(res, 200, "Email sent");
+
+      //   }
+      // })
   }catch(ex){
     return next(ex)
   }

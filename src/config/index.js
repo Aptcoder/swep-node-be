@@ -1,3 +1,6 @@
+const dotenv = require('dotenv')
+dotenv.config()
+
 module.exports = (() => {
   
   const env = process.env.NODE_ENV
@@ -8,7 +11,8 @@ module.exports = (() => {
       PORT: process.env.PORT,
       JWT_SECRET: process.env.JWT_SECRET,
       EMAIL: process.env.EMAIL,
-      PASSWORD: process.env.PASSWORD
+      PASSWORD: process.env.PASSWORD,
+      SENDGRID_API_KEY: process.env.SENDGRID_API_KEY
     }
   }
   return {
@@ -16,6 +20,7 @@ module.exports = (() => {
       JWT_SECRET: "evruyvryeyryevruer",
       PORT: 6000,
       EMAIL:'owolabihammed2001@gmail.com',
-      PASSWORD:'olalekan2019...'
+      PASSWORD:'olalekan2019...',
+      SENDGRID_API_KEY: process.env.SENDGRID_API_KEY
     }
 })()
